@@ -58,7 +58,7 @@ static void HandleDropItem(Player player)
     player.PrintInventory();
     if (player.Inventory.Count == 0) return;
 
-    Console.Write("\nEnter the exact name of the item to drop: ");
+    Console.Write("\nEnter the name of the item to drop: ");
     string itemToDrop = Console.ReadLine()?.Trim() ?? "";
 
     Console.Write("How many to drop?: ");
