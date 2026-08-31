@@ -10,7 +10,7 @@ Console.WriteLine("=== OSRS Boss & Combat Tracker ===");
 while (true)
 {
     Console.WriteLine($"\n[HP: {player.CurrentHp}/{player.MaxHp} | Gold: {player.Gold} GP]");
-    Console.Write("[1] Log Boss Kill  [2] View Drop Log  [3] View Inventory  [4] Drop Item [5] Rest at Lambridge [6] Top Hits [99] Fight Hill Giant  [0] Exit\nChoice: ");
+    Console.Write("[1] Log Boss Kill  [2] View Drop Log  [3] View Inventory  [4] Drop Item [5] Rest at Lambridge [6] Top Hits [7] Edgeville Store [99] Fight Hill Giant  [0] Exit\nChoice: ");
     var input = Console.ReadLine()?.Trim();
 
     if (input == "0") break;
@@ -74,13 +74,73 @@ while (true)
                 Console.WriteLine(hit);
             }
         }
+        
+        
     }
+    
+    else if (input == "7")
+    {
+        OpenShop(player);
+    }
+    
     else if (input == "99")
     {
         StartGiantFight(player, bossLogs,hitHistory);
     }
 }
 
+
+
+static void OpenShop(Player player)
+{
+    Console.WriteLine("\n Edgeville  Store");
+    Console.WriteLine($"Your Gold: {player.Gold} GP");
+
+    Console.WriteLine("[1] Lobster (20 GP)");
+    Console.WriteLine("[2] Strength Potion (50 GP)");
+    Console.Write("Choice: ");
+
+    string? choice = Console.ReadLine()?.Trim();
+
+    if (choice == "1")
+    {
+        int price = 20;
+
+        if (player.Gold >= price)
+        {
+            player.Gold -= price;
+            player.AddItem("Lobster", 1);
+
+            Console.WriteLine("You bought 1 Lobster.");
+            Console.WriteLine($"Remaining Gold: {player.Gold}");
+        }
+        else
+        {
+            Console.WriteLine("You don't have enough GP.");
+        }
+    }
+    else if (choice == "2")
+    {
+        int price = 50;
+
+        if (player.Gold >= price)
+        {
+            player.Gold -= price;
+            player.AddItem("Strength Potion", 1);
+
+            Console.WriteLine("You bought 1 Strength Potion.");
+            Console.WriteLine($"Remaining Gold: {player.Gold}");
+        }
+        else
+        {
+            Console.WriteLine("You don't have enough GP.");
+        }
+    }
+    else
+    {
+        Console.WriteLine("Invalid choice.");
+    }
+}
 static void HandleDropItem(Player player)
 {
     player.PrintInventory();
