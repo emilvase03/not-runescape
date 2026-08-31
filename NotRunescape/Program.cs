@@ -3,23 +3,11 @@ using OsrsTracker;
 
 var bossLogs = new List<BossLog>();
 var player = new Player();
-string name;
 
 Console.WriteLine("=== OSRS Boss & Combat Tracker ===");
 
 while (true)
 {
-    Console.Write("What is your name: ");
-    name = Console.ReadLine() ?? "";
-    
-    if (name.Length >= 1)
-        Console.WriteLine($"Welcome to Gielinor, {name}!");
-    else
-    {
-        Console.WriteLine("You don't have a name!");
-        Environment.Exit(1);
-    }
-    
     Console.WriteLine($"\n[HP: {player.CurrentHp}/{player.MaxHp} | Gold: {player.Gold} GP]");
     Console.Write("[1] Log Boss Kill  [2] View Drop Log  [3] View Inventory  [4] Drop Item  [99] Fight Hill Giant  [0] Exit\nChoice: ");
     var input = Console.ReadLine()?.Trim();
