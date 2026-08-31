@@ -103,11 +103,12 @@ static void StartGiantFight(Player player, List<BossLog> bossLogs)
 
     int giantHp = 35;
     var rng = new Random();
+    bool escaped = false;
 
     while (player.CurrentHp > 0 && giantHp > 0)
     {
         Console.WriteLine($"Your HP: {player.CurrentHp}/{player.MaxHp} | Hill Giant HP: {giantHp}");
-        Console.Write("Action: [1] Slash with Rune Scimitar  [2] Eat Lobster\nChoice: ");
+        Console.Write("Action: [1] Slash with Rune Scimitar  [2] Eat Lobster [3] Run Away\nChoice: ");
         var choice = Console.ReadLine()?.Trim();
 
         if (choice == "1")
@@ -131,6 +132,23 @@ static void StartGiantFight(Player player, List<BossLog> bossLogs)
                 Console.WriteLine("\nYou don't have any Lobsters in your inventory!");
             }
         }
+        else if (choice == "3")
+        {
+            bool runAway = rng.Next(0, 2) == 0;
+            if (runAway)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("\nYou successfully managed to escape the Hill Giant");
+                Console.ResetColor();
+                
+                escaped = true;
+                break;
+            }
+            
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("The Hill Giant caught you trying to escape!\n");
+            Console.ResetColor();
+        }
 
         if (giantHp > 0)
         {
@@ -140,6 +158,12 @@ static void StartGiantFight(Player player, List<BossLog> bossLogs)
             Console.WriteLine($"The Hill Giant swings his club for {giantHit} damage!\n");
             Console.ResetColor();
         }
+    }
+    
+    if (escaped)
+    {
+        Console.WriteLine("\nYou escaped the fight. No loot was collected.");
+        return;
     }
 
     if (player.CurrentHp > 0)
