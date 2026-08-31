@@ -3,13 +3,14 @@ using OsrsTracker;
 
 var bossLogs = new List<BossLog>();
 var player = new Player();
+var hitHistory = new List<int>();
 
 Console.WriteLine("=== OSRS Boss & Combat Tracker ===");
 
 while (true)
 {
     Console.WriteLine($"\n[HP: {player.CurrentHp}/{player.MaxHp} | Gold: {player.Gold} GP]");
-    Console.Write("[1] Log Boss Kill  [2] View Drop Log  [3] View Inventory  [4] Drop Item [5] Rest at Lambridge  [99] Fight Hill Giant  [0] Exit\nChoice: ");
+    Console.Write("[1] Log Boss Kill  [2] View Drop Log  [3] View Inventory  [4] Drop Item [5] Rest at Lambridge [6] Top Hits [7] Edgeville Store [99] Fight Hill Giant  [0] Exit\nChoice: ");
     var input = Console.ReadLine()?.Trim();
 
     if (input == "0") break;
@@ -54,12 +55,92 @@ while (true)
 
         Console.WriteLine($"HP restored to {player.CurrentHp}/{player.MaxHp}.");
     }
+    else if (input == "6")
+    {
+        if (hitHistory.Count == 0)
+        {
+            Console.WriteLine("No hits . Hit first!");
+        }
+        else
+        {
+            var topHits = hitHistory
+                .OrderByDescending(h => h)
+                .Take(3);
+
+            Console.WriteLine("\n--- Top 3 Hits ---");
+
+            foreach (var hit in topHits)
+            {
+                Console.WriteLine(hit);
+            }
+        }
+        
+        
+    }
+    
+    else if (input == "7")
+    {
+        OpenShop(player);
+    }
+    
     else if (input == "99")
     {
-        StartGiantFight(player, bossLogs);
+        StartGiantFight(player, bossLogs,hitHistory);
     }
 }
 
+
+
+static void OpenShop(Player player)
+{
+    Console.WriteLine("\n Edgeville  Store");
+    Console.WriteLine($"Your Gold: {player.Gold} GP");
+
+    Console.WriteLine("[1] Lobster (20 GP)");
+    Console.WriteLine("[2] Strength Potion (50 GP)");
+    Console.Write("Choice: ");
+
+    string? choice = Console.ReadLine()?.Trim();
+
+    if (choice == "1")
+    {
+        int price = 20;
+
+        if (player.Gold >= price)
+        {
+            player.Gold -= price;
+            player.AddItem("Lobster", 1);
+
+            Console.WriteLine("You bought 1 Lobster.");
+            Console.WriteLine($"Remaining Gold: {player.Gold}");
+        }
+        else
+        {
+            Console.WriteLine("You don't have enough GP.");
+        }
+    }
+    else if (choice == "2")
+    {
+        int price = 50;
+
+        if (player.Gold >= price)
+        {
+            player.Gold -= price;
+            player.AddItem("Strength Potion", 1);
+
+            Console.WriteLine("You bought 1 Strength Potion.");
+            Console.WriteLine($"Remaining Gold: {player.Gold}");
+        }
+        else
+        {
+            Console.WriteLine("You don't have enough GP.");
+        }
+    }
+    else
+    {
+        Console.WriteLine("Invalid choice.");
+    }
+}
 static void HandleDropItem(Player player)
 {
     player.PrintInventory();
@@ -86,7 +167,7 @@ static void HandleDropItem(Player player)
     }
 }
 
-static void StartGiantFight(Player player, List<BossLog> bossLogs)
+static void StartGiantFight(Player player, List<BossLog> bossLogs,List<int> hitHistory)
 {
     if (player.CurrentHp <= 0)
     {
@@ -113,6 +194,8 @@ static void StartGiantFight(Player player, List<BossLog> bossLogs)
         if (choice == "1")
         {
             int playerHit = rng.Next(0, 15);
+            hitHistory.Add(playerHit);
+            
             giantHp -= playerHit;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"\nYou slash the Hill Giant for a {playerHit}!");
